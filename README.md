@@ -39,7 +39,7 @@ For all instructions taking a register name D, the register name
 can be left out, in which case the ACC register will be used by default.
 (Excluding the `MOVE` instruction)
 
-### The JUMP argument
+### NOTE: The JUMP argument
 
 As would be the case in real hardware, `JUMP`s go by instructions, not by lines. Any lines that do not contain an instruction are discarded before execution (even if they contain a comment), so make sure the the arguments for `JUMP` instructions are set correctly.
 
@@ -110,22 +110,24 @@ JUMP -1     // This also is a comment
 
 ## Special instructions
 
-Special instructions expand the normal instruction set to fascilitate various convenience functions. All special instructions begin with an underscore ("_").
+Special instructions expand the normal instruction set to fascilitate various convenience functions. All special instructions begin with an underscore ("\_").
 The following special instructions are implemented:
 
-### _PRINT
+### \_PRINT
 ```
 _PRINT i_or_D
 ```
 
-If given a number i (e.g. `_PRINT 33`) the value as M(i) will be printed to stdout. If given a register name (e.g. `_PRINT ACC`), the value from that register will be printed to stdout.
+If given a number i (e.g. `_PRINT 33`) the value in M(i) will be printed to stdout.
+If given a register name (e.g. `_PRINT ACC`), the value in that register will be printed to stdout.
 
-### _INPUT
+### \_INPUT
 ```
 _INPUT i_or_D
 ```
 
-If given a number i (e.g. `_INPUT 30`) a number will be read from stdin and stored in M(i). If given a register name (e.g. `_INPUT ACC`), a number will be read from stdin and stored in that register.
+If given a number i (e.g. `_INPUT 30`) a number will be read from stdin and stored in M(i).
+If given a register name (e.g. `_INPUT ACC`), a number will be read from stdin and stored in that register.
 
 
 ## Debug instructions
