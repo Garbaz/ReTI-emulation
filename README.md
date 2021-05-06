@@ -6,10 +6,10 @@ An emulator for the fictional processor "ReTI" from the lecture [Technische Info
 
 * Full instruction set (as defined on Slide 19 of "k23-Anwendung_ReTI.pdf")
 * Special instructions for terminal interaction (see below)
-* Optional verbose live view of the register/memory state
+* Live view of register/memory state
 * Stepping
 * Comments
-* Option for adding debug instruction at the end of lines
+* A way to add debug instruction without breaking jumps (see below)
 
 
 ### Usage
