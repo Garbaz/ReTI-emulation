@@ -132,8 +132,8 @@ If given a number i (e.g. `_INPUT 30`) a number will be read from stdin and stor
 
 At the end of a line, after the instruction *and comment*, a `;` followed by another instruction can be added.
 This instruction will be executed after the line it is on, but, importantly, *does not count as an instruction for the program counter/jumps*.
-This way it is possible to add instructions for the purpose of debugging, which do not require readjusting the parameters of `JUMP` instructions.
-While any instruction can be inserted like that, the intended purpose is to add `_PRINT` instructions for easier debugging.
+This way it is possible to add instructions for debugging, without requiring adjustment of the parameters of `JUMP` instructions.
+
 
 **Example:**
 ```
@@ -142,8 +142,8 @@ While any instruction can be inserted like that, the intended purpose is to add 
 # to the program counter, so the following `JUMP` still
 # works as intended.
 
-LOADI ACC 5     # The comment comes first       ;_PRINT ACC
-JUMP -1         # Jump still correct
+ADDI ACC 1     # The comment comes first       ;_PRINT ACC
+JUMP -1         # Jump still jumps to `LOADI`
 
 ```
 
