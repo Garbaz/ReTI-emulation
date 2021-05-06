@@ -10,6 +10,7 @@ An emulator for the fictional processor "ReTI" from the lecture [Technische Info
 * Comments
 * Option for adding debug instruction at the end of lines
 
+
 ### Usage
 
 ```
@@ -24,6 +25,7 @@ OPTIONS
     -v | --verbose
         Details of about progress are printed during execution.
 ```
+
 
 ### Instructions
 
@@ -64,10 +66,32 @@ NOP                 # Does nothing
 JUMP c, i           # if ACC `c` 0: PC = PC + i   (c has to one of [< , > , <= , >= , = , !=])
 JUMP i              # PC + i
 
-## Special instructions:
+## Special instructions (Note leading underscore!):
 
 _PRINT i_or_D       # Prints the value at M(i) if given a number or to register D
 _INPUT i_or_D       # Reads from stdin and saves value to M(i) if given a number or to register D
 ```
 
-### 
+### Comments
+
+Anything after a `#` or a `//` is considered a comment, and will be ignored for execution (except for debug instructions, see below).
+
+**Example:**
+```
+JUMP 1      # This is a comment
+JUMP -1     // This also is a comment
+```
+
+
+### Debug instructions
+
+At the end of a line, after the instruction *and comment*, a `;` followed by another instruction can be added.
+This instruction will be executed after the line it is on, but, importantly, *does not count as an instruction for the program counter/jumps*.
+This way it is possible to add instructions for the purpose of debugging, which do not require readjusting the parameters of `JUMP` instructions.
+
+**Example:**
+```
+LOADI ACC 5     # The comment comes first       ;_PRINT ACC
+JUMP -1         # This jump still jumps to the instruction above, with or without the _PRINT
+
+```
