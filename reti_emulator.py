@@ -15,6 +15,13 @@ OPTIONS
     -v | --verbose
         Details of about progress are printed during execution.
 
+    -s | --stepping
+        Pause execution after every instruction and wait for ENTER
+
+    -r | --no-debug
+        Debug instructions (see README.md) are NOT executed.
+
+
 
 For further information, please look in README.md.
 """
@@ -25,7 +32,14 @@ For further information, please look in README.md.
 COMMENT_DELIMS = ["#", "//"]
 DEBUG_DELIM = ";"
 
+
+# ====== Parameters ======
+
+# DO NOT EDIT, these are set via command-line arguments!
+# Type `python3 reti_emulator.py --help` in command line for info.
 VERBOSE = False
+DEBUG = True
+STEPPING = False
 
 
 # ====== Global ReTI state ======
@@ -62,11 +76,9 @@ def interpret_line(line: (str, str)) -> bool:
     line = line[0]
     split = line.split()
 
-    ret = None
-    if len(split) >= 1:
-        ret = exec_instruction(reg, mem, *split)
+    ret = exec_instruction(reg, mem, *split)
 
-    if debug != "":
+    if DEBUG and debug != "":
         print("~ Debug(" + debug + "):   ", end="")
         interpret_line((debug, ""))
 
@@ -74,14 +86,20 @@ def interpret_line(line: (str, str)) -> bool:
 
 
 def interpret(lines: list[(str, str)]):
+    if STEPPING:
+        print("~~~~~~ Stepping mode enabled! Use ENTER to step through code ~~~~~~")
     while 0 <= reg["PC"] and reg["PC"] < len(lines):
-        if(VERBOSE):
+        if(VERBOSE and lines[reg["PC"]][0] != ""):
             print("-"*80)
             print_state_compact()
+            print()
             print("Instruction:", lines[reg["PC"]][0])
             print()
         if not interpret_line(lines[reg["PC"]]):
             reg["PC"] += 1
+        if STEPPING and lines[reg["PC"]][0] != "":
+            input()
+        
     print()
     print("~~~~~~ Reached end of code or jumped to invalid address. Final state: ~~~~~~")
     print()
@@ -104,7 +122,8 @@ def clean_code(code: str) -> list[(str, str)]:
         for c in COMMENT_DELIMS:
             line = line.split(c, 1)[0]
         line = line.strip()
-        ret.append((line, debug))
+        if line != "":
+            ret.append((line, debug))
     return ret
 
 
@@ -130,6 +149,10 @@ if __name__ == "__main__":
                     exit(0)
                 elif a in ["-v", "--verbose"]:
                     VERBOSE = True
+                elif a in ["-r", "--no-debug"]:
+                    DEBUG = False
+                elif a in ["-s", "--stepping"]:
+                    STEPPING = True
 
         code = load_code(filename)
         lines = clean_code(code)

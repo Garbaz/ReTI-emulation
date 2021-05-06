@@ -6,7 +6,10 @@ INSTRUCTIONS = {}
 
 
 def exec_instruction(reg: dict[str, int], mem: dict[int, int], instr: str, *args) -> bool:
-    return INSTRUCTIONS[instr](reg, mem, *args)
+    # `args` are reverse, since arguments without a default value have to come before arguments with.
+    # This is to allow for instructions taking a register to default to ACC,
+    # and JUMP to default to unconditional jump
+    return INSTRUCTIONS[instr](reg, mem, *(reversed(args)))
 
 
 # ------------------------- LOCAL -------------------------
@@ -26,19 +29,19 @@ def _gen_instructions():
 
     # --- LOAD instructions ---
 
-    def LOAD(reg, mem, D, i):
+    def LOAD(reg, mem, i, D="ACC"):
         reg[D] = mem[int(i)]
         return D == "PC"
 
-    def LOADIN1(reg, mem, D, i):
+    def LOADIN1(reg, mem, i, D="ACC"):
         reg[D] = mem[int(i)+reg["IN1"]]
         return D == "PC"
 
-    def LOADIN2(reg, mem, D, i):
+    def LOADIN2(reg, mem, i, D="ACC"):
         reg[D] = mem[int(i)+reg["IN2"]]
         return D == "PC"
 
-    def LOADI(reg, mem, D, i):
+    def LOADI(reg, mem, i, D="ACC"):
         reg[D] = int(i)
         return D == "PC"
 
@@ -53,51 +56,51 @@ def _gen_instructions():
     def STOREIN2(reg, mem, i):
         mem[int(i)+reg["IN2"]] = reg["ACC"]
 
-    def MOVE(reg, mem, S, D):
+    def MOVE(reg, mem, D, S):
         reg[D] = reg[S]
         return D == "PC"
 
     # --- Compute instructions (immediate) ---
 
-    def SUBI(reg, mem, D, i):
+    def SUBI(reg, mem, i, D="ACC"):
         reg[D] -= int(i)
         return D == "PC"
 
-    def ADDI(reg, mem, D, i):
+    def ADDI(reg, mem, i, D="ACC"):
         reg[D] += int(i)
         return D == "PC"
 
-    def OPLUSI(reg, mem, D, i):
+    def OPLUSI(reg, mem, i, D="ACC"):
         reg[D] ^= int(i)
         return D == "PC"
 
-    def ORI(reg, mem, D, i):
+    def ORI(reg, mem, i, D="ACC"):
         reg[D] |= int(i)
         return D == "PC"
 
-    def ANDI(reg, mem, D, i):
+    def ANDI(reg, mem, i, D="ACC"):
         reg[D] &= int(i)
         return D == "PC"
 
     # --- Compute instructions (memory) ---
 
-    def SUB(reg, mem, D, i):
+    def SUB(reg, mem, i, D="ACC"):
         reg[D] -= mem[int(i)]
         return D == "PC"
 
-    def ADD(reg, mem, D, i):
+    def ADD(reg, mem, i, D="ACC"):
         reg[D] += mem[int(i)]
         return D == "PC"
 
-    def OPLUS(reg, mem, D, i):
+    def OPLUS(reg, mem, i, D="ACC"):
         reg[D] ^= mem[int(i)]
         return D == "PC"
 
-    def OR(reg, mem, D, i):
+    def OR(reg, mem, i, D="ACC"):
         reg[D] |= mem[int(i)]
         return D == "PC"
 
-    def AND(reg, mem, D, i):
+    def AND(reg, mem, i, D="ACC"):
         reg[D] &= mem[int(i)]
         return D == "PC"
 
@@ -106,11 +109,8 @@ def _gen_instructions():
     def NOP(reg, mem):
         pass
 
-    def JUMP(reg, mem, c, i=None):
-        if i == None:
-            reg["PC"] += int(c)  # Not pretty, but if only one argument is given `c` is 'i'...
-            return True
-        elif COMPARATORS[c](reg["ACC"]):
+    def JUMP(reg, mem, i, c=""):
+        if COMPARATORS[c](reg["ACC"]):
             reg["PC"] += int(i)
             return True
 
@@ -119,13 +119,13 @@ def _gen_instructions():
     def _TEST(reg, mem, *args):
         print("TEST", args)
 
-    def _PRINT(reg, mem, i_or_D):
+    def _PRINT(reg, mem, i_or_D="ACC"):
         if i_or_D.isdecimal():
             print(">>>>>>  M(" + i_or_D + ") = " + str(mem[int(i_or_D)]))
         else:
             print(">>>>>>  " + i_or_D + " = " + str(reg[i_or_D]))
 
-    def _INPUT(reg, mem, i_or_D):
+    def _INPUT(reg, mem, i_or_D="ACC"):
         if i_or_D.isdecimal():
             mem[int(i_or_D)] = int(input(">>>>>>  M(" + i_or_D + ")" + " = "))
         else:
