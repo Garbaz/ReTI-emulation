@@ -5,7 +5,7 @@
 INSTRUCTIONS = {}
 
 
-def exec_instruction(reg: dict[str, int], mem: dict[int, int], instr: str, *args) -> bool:
+def exec_instruction(reg, mem, instr, *args):
     # `args` are reverse, since arguments without a default value have to come before arguments with.
     # This is to allow for instructions taking a register to default to ACC,
     # and JUMP to default to unconditional jump

@@ -69,7 +69,7 @@ def print_state_compact():
 
 # ====== Interpreter ======
 
-def interpret_line(line: (str, str)) -> bool:
+def interpret_line(line):
     global reg, mem
     debug = line[1]
     line = line[0]
@@ -84,7 +84,7 @@ def interpret_line(line: (str, str)) -> bool:
     return ret
 
 
-def interpret(lines: list[(str, str)]):
+def interpret(lines):
     if STEPPING:
         print("~~~~~~ Stepping mode enabled! Use ENTER to step through code ~~~~~~")
     while 0 <= reg["PC"] and reg["PC"] < len(lines):
@@ -109,7 +109,7 @@ def interpret(lines: list[(str, str)]):
 
 # ====== Code handling ======
 
-def clean_code(code: str) -> list[(str, str)]:
+def clean_code(code):
     ret = []
     for line in code.splitlines():
         debug = line.split(DEBUG_DELIM)
@@ -126,7 +126,7 @@ def clean_code(code: str) -> list[(str, str)]:
     return ret
 
 
-def load_code(filename: str) -> str:
+def load_code(filename):
     with open(filename, "r") as file:
         return file.read()
 
