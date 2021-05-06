@@ -144,3 +144,9 @@ LOADI ACC 5     # The comment comes first       ;_PRINT ACC
 JUMP -1         # Jump still correct
 
 ```
+
+
+# TODO
+
+* Fancy print/input (?) (something like `_PRINT "The current value is " ACC`)
+* Error handling!!!

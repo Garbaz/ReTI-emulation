@@ -11,7 +11,7 @@ with FILE being the name of a file containing ReTI instructions.
 OPTIONS
     -h | --help
         Print this help message.
-    
+
     -v | --verbose
         Details of about progress are printed during execution.
 
@@ -62,7 +62,7 @@ def print_state():
 
 def print_state_compact():
     print(f'Registers:   ACC = {reg["ACC"]:< 4} , IN1 = {reg["IN1"]:< 4} , IN2 = {reg["IN2"]:< 4} , PC = {reg["PC"]:< 4}')
-    print( "Memory:      ", end="")
+    print("Memory:      ", end="")
     for k, v in mem.items():
         print(f'M({k:< 4}) = {v:< 4} , ', end="")
     print()
@@ -89,16 +89,16 @@ def interpret(lines: list[(str, str)]):
     if STEPPING:
         print("~~~~~~ Stepping mode enabled! Use ENTER to step through code ~~~~~~")
     while 0 <= reg["PC"] and reg["PC"] < len(lines):
+        if STEPPING and lines[reg["PC"]][0] != "":
+            input()
         if(VERBOSE and lines[reg["PC"]][0] != ""):
             print("-"*80)
             print_state_compact()
             print()
             print("Instruction:", lines[reg["PC"]][0])
-            print()
         if not interpret_line(lines[reg["PC"]]):
             reg["PC"] += 1
-        if STEPPING and lines[reg["PC"]][0] != "":
-            input()
+
         
     print()
     print("~~~~~~ Reached end of code or jumped to invalid address. Final state: ~~~~~~")

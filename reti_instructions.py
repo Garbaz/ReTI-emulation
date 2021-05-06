@@ -121,15 +121,15 @@ def _gen_instructions():
 
     def _PRINT(reg, mem, i_or_D="ACC"):
         if i_or_D.isdecimal():
-            print(">>>>>>  M(" + i_or_D + ") = " + str(mem[int(i_or_D)]))
+            print("~~ M(" + i_or_D + ") = " + str(mem[int(i_or_D)]))
         else:
-            print(">>>>>>  " + i_or_D + " = " + str(reg[i_or_D]))
+            print("~~ " + i_or_D + " = " + str(reg[i_or_D]))
 
     def _INPUT(reg, mem, i_or_D="ACC"):
         if i_or_D.isdecimal():
-            mem[int(i_or_D)] = int(input(">>>>>>  M(" + i_or_D + ")" + " = "))
+            mem[int(i_or_D)] = int(input(">> M(" + i_or_D + ")" + " = "))
         else:
-            reg[i_or_D] = int(input(">>>>>>>  " + i_or_D + " = "))
+            reg[i_or_D] = int(input(">> " + i_or_D + " = "))
 
     # ============
 
