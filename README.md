@@ -153,4 +153,4 @@ JUMP -1         # Jump still jumps to `LOADI`
 ## TODO
 
 * Fancy print/input (?) (something like `_PRINT "The current value is " ACC`)
-* Error handling!!!
+* Error handling and comments !!!!
