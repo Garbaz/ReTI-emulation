@@ -44,7 +44,7 @@ can be left out, in which case the ACC register will be used by default.
 As would be the case in real hardware, `JUMP`s go by instructions, not by lines. Any lines that do not contain an instruction are discarded before execution (even if they contain a comment), so make sure the the arguments for `JUMP` instructions are set correctly.
 
 **Example:**
-```
+```py
 ADDI ACC 1
 # With a comment or without...
 
@@ -54,7 +54,7 @@ JUMP -1 # ... so this `JUMP` still jumps to the `ADDI` in the first line
 
 ### Full list of instructions
 
-```
+```py
 ## Load instructions:
 
 LOAD [D] i          # D = M(i)
@@ -88,7 +88,9 @@ AND [D] i           # D = D & M(i)
 ## Jump instructions:
 
 NOP                 # Does nothing
-JUMP c, i           # if ACC `c` 0: PC = PC + i   (c has to one of [< , > , <= , >= , = , !=])
+JUMP c, i           # if ACC `c` 0: PC = PC + i
+                    # (c has to one of [< , > , <= , >= , = , !=])
+
 JUMP i              # PC = PC + i
 
 ## Special instructions (Note leading underscore!):
@@ -102,8 +104,10 @@ _INPUT i_or_D       # Reads from stdin and stores the value to M(i) or register 
 Anything after a `#` or a `//` is considered a comment, and will be ignored for execution (except for debug instructions, see below).
 
 **Example:**
-```
+```py
 JUMP 1      # This is a comment
+```
+```c
 JUMP -1     // This also is a comment
 ```
 
@@ -138,7 +142,7 @@ This way it is possible to add instructions for debugging, without requiring adj
 
 
 **Example:**
-```
+```py
 # The `_PRINT ACC` at the end of the line is executed,
 # but does not count as it's own instruction in regards
 # to the program counter, so the following `JUMP` still
@@ -153,4 +157,5 @@ JUMP -1         # Jump still jumps to `LOADI`
 ## TODO
 
 * Fancy print/input (?) (something like `_PRINT "The current value is " ACC`)
-* Error handling and comments !!!!
+* Error handling and comments !!
+* Stats (number of cycles, memory usage, jumps...) [live? total?]

@@ -2,7 +2,7 @@
 from reti_instructions import exec_instruction
 from sys import argv, exit
 
-_HELP = """
+HELP_MSG = """
 USAGE
     python3 reti_emulator.py [OPTIONS] FILE
 
@@ -70,10 +70,18 @@ def print_state_compact():
 # ====== Interpreter ======
 
 def interpret_line(line):
-    global reg, mem
+    """
+    Interpret and execute a single line
+    `line : tuple[str,str]``
+        the instruction and debug instruction to execute
+    `-> bool`
+        True if PC should NOT be incremented, None or False otherwise
+    """
+
+    instr = line[0]
     debug = line[1]
-    line = line[0]
-    split = line.split()
+
+    split = instr.split()
 
     ret = exec_instruction(reg, mem, *split)
 
@@ -85,20 +93,28 @@ def interpret_line(line):
 
 
 def interpret(lines):
+    """
+    Interpret and execute a multiple lines
+    `lines : list[tuple[str,str]]`
+         the instruction/debug-instruction pairs to execute
+    """
+
     if STEPPING:
         print("~~~~~~ Stepping mode enabled! Use ENTER to step through code ~~~~~~")
     while 0 <= reg["PC"] and reg["PC"] < len(lines):
-        if STEPPING and lines[reg["PC"]][0] != "":
-            input()
-        if(VERBOSE and lines[reg["PC"]][0] != ""):
+        if STEPPING:
+            input()  # Wait for input before executing instruction
+
+        if VERBOSE:
+            # Print information about current state and instruction
             print("-"*80)
             print_state_compact()
             print()
             print("Instruction:", lines[reg["PC"]][0])
+
         if not interpret_line(lines[reg["PC"]]):
             reg["PC"] += 1
 
-        
     print()
     print("~~~~~~ Reached end of code or jumped to invalid address. Final state: ~~~~~~")
     print()
@@ -110,14 +126,26 @@ def interpret(lines):
 # ====== Code handling ======
 
 def clean_code(code):
+    """
+    Remove comments and split into instructions/debug-instructions
+    Lines containing no instruction are removed
+    `code : str`
+        The code e.g. as read from a file
+    `-> list[tuple[str,str]]`
+        The instruction/debug-instruction pairs
+    """
+
     ret = []
     for line in code.splitlines():
+
+        # Split off and clean debug instruction
         debug = line.split(DEBUG_DELIM)
         if len(debug) > 1:
             debug = debug[-1].strip()
         else:
             debug = ""
 
+        # Remove comments and clean instruction
         for c in COMMENT_DELIMS:
             line = line.split(c, 1)[0]
         line = line.strip()
@@ -134,7 +162,7 @@ def load_code(filename):
 # ====== Main ======
 if __name__ == "__main__":
     if len(argv) == 1:
-        print(_HELP)
+        print(HELP_MSG)
         exit(1)
     else:
         filename = ""
@@ -144,7 +172,7 @@ if __name__ == "__main__":
                 filename = a
             else:
                 if a in ["-h", "--help"]:
-                    print(_HELP)
+                    print(HELP_MSG)
                     exit(0)
                 elif a in ["-v", "--verbose"]:
                     VERBOSE = True

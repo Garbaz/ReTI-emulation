@@ -1,3 +1,4 @@
+from reti_exception_handling import eprint
 
 
 # ------------------------- EXPORT -------------------------
@@ -6,13 +7,41 @@ INSTRUCTIONS = {}
 
 
 def exec_instruction(reg, mem, instr, *args):
-    # `args` are reverse, since arguments without a default value have to come before arguments with.
+    """
+    Execute a single instruction `instr`, modifying `reg` & `mem`
+    `reg : dict[str,int]`
+        The device's registers; Has to contain "ACC","IN1","IN2","PC"
+    `mem : dict[int,int]`
+        The device's memory; Any cells read from have to exist before-hand
+    `instr : str`
+        The instruction name
+    `*args: str`
+        The arguments for the given instruction
+    """
+
+    # `args` are reversed, since arguments without a default value have to come before arguments with.
     # This is to allow for instructions taking a register to default to ACC,
-    # and JUMP to default to unconditional jump
-    return INSTRUCTIONS[instr](reg, mem, *(reversed(args)))
+    # and JUMP to default to unconditional jump, without any dirty functool shenanigans
+    try:
+        f = INSTRUCTIONS[instr]
+    except KeyError as inst:
+        eprint(instr, args, inst, "Invalid instruction.")
+        exit(1)
+    try:
+        return f(reg, mem, *(reversed(args)))
+    except ValueError as inst:
+        eprint(instr, args, inst, "An argument that should be a number isn't.")
+        exit(1)
+    except TypeError as inst:
+        eprint(instr, args, inst, "An instruction has the wrong number of arguments.")
+        exit(1)
+    except KeyError as inst:
+        eprint(instr, args, inst, "Invalid register name, reading from empty memory or invalid comparator for jump.")
+        exit(1)
 
 
 # ------------------------- LOCAL -------------------------
+
 
 def _gen_instructions():
     global INSTRUCTIONS
