@@ -9,6 +9,7 @@ An emulator for the fictional processor "ReTI" from the lecture [Technische Info
 * Live view of register/memory state
 * Stepping
 * Comments
+* Error handling
 * A way to add debug instruction without breaking jumps (see below)
 
 
@@ -22,7 +23,7 @@ with FILE being the name of a file containing ReTI instructions.
 OPTIONS
     -h | --help
         Print this help message.
-    
+
     -v | --verbose
         Details of about progress are printed during execution.
 
@@ -30,7 +31,7 @@ OPTIONS
         Pause execution after every instruction and wait for ENTER
 
     -r | --no-debug
-        Debug instructions (see README.md) are NOT executed.
+        Debug instructions and end-state (see README.md) are NOT executed.
 ```
 
 ## Instructions
@@ -156,6 +157,6 @@ JUMP -1         # Jump still jumps to `LOADI`
 
 ## TODO
 
-* Fancy print/input (?) (something like `_PRINT "The current value is " ACC`)
-* Error handling and comments !!
-* Stats (number of cycles, memory usage, jumps...) [live? total?]
+- [ ] Fancy print/input (?) (something like `_PRINT "The current value is " ACC`)
+- [x] Error handling and comments
+- [x] Stats (number of cycles, memory usage, jumps...) [live? total?]

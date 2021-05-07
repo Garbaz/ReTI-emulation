@@ -19,7 +19,7 @@ OPTIONS
         Pause execution after every instruction and wait for ENTER
 
     -r | --no-debug
-        Debug instructions (see README.md) are NOT executed.
+        Debug instructions and end-state (see README.md) are NOT executed.
 
 
 For further information, please look in README.md.
@@ -98,7 +98,8 @@ def interpret(lines):
     `lines : list[tuple[str,str]]`
          the instruction/debug-instruction pairs to execute
     """
-
+    stats_steps = 0
+    stats_jumps = 0
     if STEPPING:
         print("~~~~~~ Stepping mode enabled! Use ENTER to step through code ~~~~~~")
     while 0 <= reg["PC"] and reg["PC"] < len(lines):
@@ -114,13 +115,22 @@ def interpret(lines):
 
         if not interpret_line(lines[reg["PC"]]):
             reg["PC"] += 1
+        else:
+            stats_jumps += 1
+        stats_steps += 1
 
-    print()
-    print("~~~~~~ Reached end of code or jumped to invalid address. Final state: ~~~~~~")
-    print()
-    print_state()
-    print()
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    if DEBUG:
+        print()
+        print("~~~~~~ Reached end of code or jumped to invalid address. Final state: ~~~~~~")
+        print()
+        print_state()
+        print()
+        print("Stats:")
+        print("    Total steps  : ", stats_steps)
+        print("    Jumps taken  : ", stats_jumps)
+        print("    Memory usage : ",len(mem))
+        print()
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 
 # ====== Code handling ======
