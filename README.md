@@ -117,15 +117,14 @@ JUMP -1     // This also is a comment
 
 ## Special instructions
 
-Special instructions expand the normal instruction set to fascilitate various convenience functions. All special instructions begin with an underscore ("\_").
-The following special instructions are implemented:
+Special instructions expand the normal instruction set to fascilitate various convenience functions. All special instructions begin with an underscore ("\_"). The following special instructions are implemented:
 
 ### \_PRINT
 ```
 _PRINT i_or_D
 ```
 
-If given a number i (e.g. `_PRINT 33`) the value in M(i) will be printed to stdout.
+If given a number i (e.g. `_PRINT 33`) the value in M(i) will be printed to stdout.\
 If given a register name (e.g. `_PRINT ACC`), the value in that register will be printed to stdout.
 
 ### \_INPUT
@@ -133,16 +132,15 @@ If given a register name (e.g. `_PRINT ACC`), the value in that register will be
 _INPUT i_or_D
 ```
 
-If given a number i (e.g. `_INPUT 30`) a number will be read from stdin and stored in M(i).
+If given a number i (e.g. `_INPUT 30`) a number will be read from stdin and stored in M(i).\
 If given a register name (e.g. `_INPUT ACC`), a number will be read from stdin and stored in that register.
 
 
 ## Debug instructions
 
-At the end of a line, after the instruction *and comment*, a `;` followed by another instruction can be added.
+At the end of a line, after the instruction *and comment*, a `;` followed by another instruction can be added.\
 This instruction will be executed after the line it is on, but, importantly, *does not count as an instruction for the program counter/jumps*.
 This way it is possible to add instructions for debugging, without requiring adjustment of the parameters of `JUMP` instructions.
-
 
 **Example:**
 ```py
@@ -160,5 +158,5 @@ JUMP -1         # Jump still jumps to `LOADI`
 ## TODO
 
 - [ ] Fancy print/input (?) (something like `_PRINT "The current value is " ACC`)
-- [x] Error handling and comments
-- [x] Stats (number of cycles, memory usage, jumps...) [live? total?]
+- [x] Error handling and comments [still can be improved]
+- [x] Stats (number of cycles, memory usage, jumps...) [only end-total implemented so far]
