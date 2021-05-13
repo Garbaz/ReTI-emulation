@@ -150,7 +150,7 @@ This way it is possible to add instructions for debugging, without requiring adj
 # works as intended.
 
 ADDI ACC 1     # The comment comes first       ;_PRINT ACC
-JUMP -1         # Jump still jumps to `LOADI`
+JUMP -1         # Jump still jumps to `ADDI`
 
 ```
 
